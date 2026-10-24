@@ -2,7 +2,12 @@
 #include <iostream>
 
 UserInfoJZY::UserInfoJZY()
-    : qqOpened(false), weChatOpened(false), weiboOpened(false) {}
+    : userID(""), nickName(""), password(""), birthday(""), location(""), registrationTime(""), currentPlatform(""), qqOpened(false), weChatOpened(false), weiboOpened(false) {}
+
+UserInfoJZY::UserInfoJZY(const std::string& id)
+    : UserInfoJZY() {
+    userID = id;
+}
 
 UserInfoJZY::~UserInfoJZY() {}
 
@@ -33,10 +38,14 @@ bool UserInfoJZY::isWeChatOpened() const { return weChatOpened; }
 void UserInfoJZY::setWeiboOpened(bool flag) { weiboOpened = flag; }
 bool UserInfoJZY::isWeiboOpened() const { return weiboOpened; }
 
+void UserInfoJZY::setCurrentPlatform(const std::string& platform) { currentPlatform = platform; }
+std::string UserInfoJZY::getCurrentPlatform() const { return currentPlatform; }
+
 void UserInfoJZY::showInfo() const {
     std::cout << "用户ID: " << userID << "\n";
     std::cout << "昵称: " << nickName << "\n";
     std::cout << "生日: " << birthday << "\n";
     std::cout << "所在地: " << location << "\n";
     std::cout << "注册时间: " << registrationTime << "\n";
+    std::cout << "已开通平台: QQ=" << qqOpened << " 微信=" << weChatOpened << " 微博=" << weiboOpened << "\n";
 }

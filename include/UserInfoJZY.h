@@ -7,6 +7,7 @@
 class UserInfoJZY {
 public:
     UserInfoJZY();
+    explicit UserInfoJZY(const std::string& id);
     ~UserInfoJZY();
 
     void setUserID(const std::string& id);
@@ -36,6 +37,9 @@ public:
     void setWeiboOpened(bool flag);
     bool isWeiboOpened() const;
 
+    void setCurrentPlatform(const std::string& platform);
+    std::string getCurrentPlatform() const;
+
     void showInfo() const;
 
 private:
@@ -45,6 +49,7 @@ private:
     std::string birthday;
     std::string location;
     std::string registrationTime;
+    std::string currentPlatform;
 
     bool qqOpened;
     bool weChatOpened;

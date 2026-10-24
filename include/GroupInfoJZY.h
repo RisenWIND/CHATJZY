@@ -23,6 +23,7 @@ public:
 
     void addMember(const std::string& memberID);
     void removeMember(const std::string& memberID);
+    bool hasMember(const std::string& memberID) const;
     std::vector<std::string> getMembers() const;
 
     void showInfo() const;

@@ -1,4 +1,5 @@
 #include "GroupInfoJZY.h"
+#include <algorithm>
 #include <iostream>
 
 GroupInfoJZY::GroupInfoJZY() {}
@@ -17,7 +18,9 @@ void GroupInfoJZY::setOwnerID(const std::string& id) { ownerID = id; }
 std::string GroupInfoJZY::getOwnerID() const { return ownerID; }
 
 void GroupInfoJZY::addMember(const std::string& memberID) {
-    members.push_back(memberID);
+    if (!hasMember(memberID)) {
+        members.push_back(memberID);
+    }
 }
 
 void GroupInfoJZY::removeMember(const std::string& memberID) {
@@ -25,6 +28,10 @@ void GroupInfoJZY::removeMember(const std::string& memberID) {
     if (it != members.end()) {
         members.erase(it);
     }
+}
+
+bool GroupInfoJZY::hasMember(const std::string& memberID) const {
+    return std::find(members.begin(), members.end(), memberID) != members.end();
 }
 
 std::vector<std::string> GroupInfoJZY::getMembers() const { return members; }
