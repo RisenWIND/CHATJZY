@@ -20,9 +20,9 @@ void FriendInfoJZY::setPlatform(const std::string& platformName) { platform = pl
 std::string FriendInfoJZY::getPlatform() const { return platform; }
 
 void FriendInfoJZY::showInfo() const {
-    std::cout << "好友ID: " << friendID << "\n";
-    std::cout << "昵称: " << nickName << "\n";
-    std::cout << "备注: " << remark << "\n";
-    std::cout << "分组: " << group << "\n";
-    std::cout << "平台: " << platform << "\n";
+    std::cout << "Friend ID: " << friendID << "\n";
+    std::cout << "Nickname: " << nickName << "\n";
+    std::cout << "Remark: " << remark << "\n";
+    std::cout << "Group: " << group << "\n";
+    std::cout << "Platform: " << platform << "\n";
 }

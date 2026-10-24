@@ -1,82 +1,38 @@
-#include "GroupManagerJZY.h"
-#include <algorithm>
+#include "GroupInfoJZY.h"
 #include <iostream>
+#include <vector>
 
-GroupManagerJZY::GroupManagerJZY() {}
-GroupManagerJZY::~GroupManagerJZY() {}
+GroupInfoJZY::GroupInfoJZY() : groupID(""), groupName(""), platform(""), ownerID("") {}
+GroupInfoJZY::~GroupInfoJZY() {}
 
-bool GroupManagerJZY::addGroup(std::vector<GroupInfoJZY>& groups, const GroupInfoJZY& group) {
-    for (const auto& item : groups) {
-        if (item.getGroupID() == group.getGroupID()) {
-            return false;
-        }
-    }
-    groups.push_back(group);
-    return true;
-}
+void GroupInfoJZY::setGroupID(const std::string& id) { groupID = id; }
+std::string GroupInfoJZY::getGroupID() const { return groupID; }
 
-bool GroupManagerJZY::joinGroup(std::vector<GroupInfoJZY>& groups, const std::string& groupID, const std::string& userID) {
-    auto it = std::find_if(groups.begin(), groups.end(), [&](const GroupInfoJZY& group) {
-        return group.getGroupID() == groupID;
-    });
-    if (it == groups.end()) {
-        return false;
-    }
-    it->addMember(userID);
-    return true;
-}
+void GroupInfoJZY::setGroupName(const std::string& name) { groupName = name; }
+std::string GroupInfoJZY::getGroupName() const { return groupName; }
 
-bool GroupManagerJZY::exitGroup(std::vector<GroupInfoJZY>& groups, const std::string& groupID, const std::string& userID) {
-    auto it = std::find_if(groups.begin(), groups.end(), [&](const GroupInfoJZY& group) {
-        return group.getGroupID() == groupID;
-    });
-    if (it == groups.end()) {
-        return false;
-    }
-    it->removeMember(userID);
-    return true;
-}
+void GroupInfoJZY::setPlatform(const std::string& platformName) { platform = platformName; }
+std::string GroupInfoJZY::getPlatform() const { return platform; }
 
-GroupInfoJZY GroupManagerJZY::findGroupByID(const std::vector<GroupInfoJZY>& groups, const std::string& groupID) const {
-    for (const auto& group : groups) {
-        if (group.getGroupID() == groupID) {
-            return group;
-        }
-    }
-    return GroupInfoJZY();
-}
+void GroupInfoJZY::setOwnerID(const std::string& id) { ownerID = id; }
+std::string GroupInfoJZY::getOwnerID() const { return ownerID; }
 
-std::vector<GroupInfoJZY> GroupManagerJZY::findGroupsByPlatform(const std::vector<GroupInfoJZY>& groups, const std::string& platform) const {
-    std::vector<GroupInfoJZY> result;
-    for (const auto& group : groups) {
-        if (group.getPlatform() == platform) {
-            result.push_back(group);
-        }
-    }
-    return result;
-}
-
-void GroupManagerJZY::printGroups(const std::vector<GroupInfoJZY>& groups) const {
-    if (groups.empty()) {
-        std::cout << "No groups currently\n";
-        return;
-    }
-    int index = 1;
-    for (const auto& group : groups) {
-        std::cout << index++ << ". " << group.getGroupName() << " (" << group.getGroupID() << ")" << " Platform:" << group.getPlatform() << "\n";
+void GroupInfoJZY::addMember(const std::string& userID) {
+    if (std::find(members.begin(), members.end(), userID) == members.end()) {
+        members.push_back(userID);
     }
 }
 
-void GroupManagerJZY::printMembers(const GroupInfoJZY& group) const {
-    const auto members = group.getMembers();
-    if (members.empty()) {
-        std::cout << "No members in the group\n";
-        return;
-    }
-    int index = 1;
-    for (const auto& member : members) {
-        std::cout << index++ << ". " << member << "\n";
-    }
+void GroupInfoJZY::removeMember(const std::string& userID) {
+    members.erase(std::remove(members.begin(), members.end(), userID), members.end());
 }
 
+std::vector<std::string> GroupInfoJZY::getMembers() const { return members; }
 
+void GroupInfoJZY::showInfo() const {
+    std::cout << "Group ID: " << groupID << "\n";
+    std::cout << "Group name: " << groupName << "\n";
+    std::cout << "Platform: " << platform << "\n";
+    std::cout << "Owner ID: " << ownerID << "\n";
+    std::cout << "Member count: " << members.size() << "\n";
+}

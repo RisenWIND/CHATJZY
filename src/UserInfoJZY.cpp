@@ -42,10 +42,10 @@ void UserInfoJZY::setCurrentPlatform(const std::string& platform) { currentPlatf
 std::string UserInfoJZY::getCurrentPlatform() const { return currentPlatform; }
 
 void UserInfoJZY::showInfo() const {
-    std::cout << "用户ID: " << userID << "\n";
-    std::cout << "昵称: " << nickName << "\n";
-    std::cout << "生日: " << birthday << "\n";
-    std::cout << "所在地: " << location << "\n";
-    std::cout << "注册时间: " << registrationTime << "\n";
-    std::cout << "已开通平台: QQ=" << qqOpened << " 微信=" << weChatOpened << " 微博=" << weiboOpened << "\n";
+    std::cout << "User ID: " << userID << "\n";
+    std::cout << "Nickname: " << nickName << "\n";
+    std::cout << "Birthday: " << birthday << "\n";
+    std::cout << "Location: " << location << "\n";
+    std::cout << "Registration time: " << registrationTime << "\n";
+    std::cout << "Opened platforms: QQ=" << qqOpened << " WeChat=" << weChatOpened << " Weibo=" << weiboOpened << "\n";
 }

@@ -8,7 +8,7 @@
 
 SystemUIJZY::SystemUIJZY() : loggedIn(false) {
     loadData();
-    std::cout << "欢迎使用即时通信模拟平台（JZY版）\n";
+    std::cout << "Welcome to the Instant Messaging Platform (JZY Version)\n";
 }
 
 SystemUIJZY::~SystemUIJZY() {
@@ -41,8 +41,8 @@ void SystemUIJZY::run() {
             switch (choice) {
                 case 1: registerUser(); break;
                 case 2: loginUser(); break;
-                case 3: std::cout << "系统已退出\n"; return;
-                default: std::cout << "输入有误，请重新选择\n"; break;
+                case 3: std::cout << "System exit.\n"; return;
+                default: std::cout << "Invalid input, please try again.\n"; break;
             }
         } else {
             showPlatformMenu();
@@ -55,7 +55,7 @@ void SystemUIJZY::run() {
             }
             std::string platform = getPlatformNameFromChoice(platformChoice);
             if (platform.empty()) {
-                std::cout << "无效选择\n";
+                std::cout << "Invalid choice\n";
                 continue;
             }
             handlePlatformAction(platform);
@@ -66,63 +66,63 @@ void SystemUIJZY::run() {
 std::string SystemUIJZY::getPlatformNameFromChoice(int choice) const {
     switch (choice) {
         case 1: return "QQ";
-        case 2: return "微信";
-        case 3: return "微博";
-        case 4: return "绑定管理";
-        case 5: return "退出登录";
+        case 2: return "WeChat";
+        case 3: return "Weibo";
+        case 4: return "Bind";
+        case 5: return "Logout";
         default: return "";
     }
 }
 
 bool SystemUIJZY::userHasPlatform(const std::string& platformName) const {
     if (platformName == "QQ") return currentUser.isQQOpened();
-    if (platformName == "微信") return currentUser.isWeChatOpened();
-    if (platformName == "微博") return currentUser.isWeiboOpened();
+    if (platformName == "WeChat") return currentUser.isWeChatOpened();
+    if (platformName == "Weibo") return currentUser.isWeiboOpened();
     return false;
 }
 
 void SystemUIJZY::openPlatform(const std::string& platformName) {
     if (platformName == "QQ") currentUser.setQQOpened(true);
-    else if (platformName == "微信") currentUser.setWeChatOpened(true);
-    else if (platformName == "微博") currentUser.setWeiboOpened(true);
-    std::cout << platformName << " 已开通\n";
+    else if (platformName == "WeChat") currentUser.setWeChatOpened(true);
+    else if (platformName == "Weibo") currentUser.setWeiboOpened(true);
+    std::cout << platformName << " is enabled.\n";
 }
 
 void SystemUIJZY::showMainMenu() {
-    std::cout << "\n=== 欢迎使用即时通信模拟平台 ===\n";
-    std::cout << "1. 注册\n";
-    std::cout << "2. 登录\n";
-    std::cout << "3. 退出\n";
-    std::cout << "请选择：";
+    std::cout << "\n=== Instant Messaging Platform ===\n";
+    std::cout << "1. Register\n";
+    std::cout << "2. Login\n";
+    std::cout << "3. Exit\n";
+    std::cout << "Choose: ";
 }
 
 void SystemUIJZY::showPlatformMenu() {
-    std::cout << "\n=== 平台选择 ===\n";
+    std::cout << "\n=== Platform Selection ===\n";
     std::cout << "1. QQ\n";
-    std::cout << "2. 微信\n";
-    std::cout << "3. 微博\n";
-    std::cout << "4. 绑定管理\n";
-    std::cout << "5. 退出登录\n";
-    std::cout << "请选择：";
+    std::cout << "2. WeChat\n";
+    std::cout << "3. Weibo\n";
+    std::cout << "4. Bind Management\n";
+    std::cout << "5. Logout\n";
+    std::cout << "Choose: ";
 }
 
 void SystemUIJZY::registerUser() {
     UserInfoJZY user;
     std::string id, nick, pw, birthday, location;
-    std::cout << "请输入ID：";
+    std::cout << "Enter ID: ";
     std::cin >> id;
     if (accountManager.userExists(users, id)) {
-        std::cout << "ID已被占用，请重新注册\n";
+        std::cout << "ID already exists. Please register again.\n";
         return;
     }
 
-    std::cout << "请输入昵称：";
+    std::cout << "Enter nickname: ";
     std::cin >> nick;
-    std::cout << "请输入密码：";
+    std::cout << "Enter password: ";
     std::cin >> pw;
-    std::cout << "请输入生日：";
+    std::cout << "Enter birthday: ";
     std::cin >> birthday;
-    std::cout << "请输入所在地：";
+    std::cout << "Enter location: ";
     std::cin >> location;
 
     user.setUserID(id);
@@ -132,62 +132,62 @@ void SystemUIJZY::registerUser() {
     user.setLocation(location);
     user.setRegistrationTime(getCurrentTimeString());
 
-    std::cout << "请选择开通平台（1.QQ 2.微信 3.微博，输入0跳过）：";
+    std::cout << "Choose platforms to enable (1.QQ 2.WeChat 3.Weibo, 0 to skip): ";
     int platformChoice = 0;
     std::cin >> platformChoice;
     while (platformChoice != 0) {
         std::string platformName;
         if (platformChoice == 1) platformName = "QQ";
-        else if (platformChoice == 2) platformName = "微信";
-        else if (platformChoice == 3) platformName = "微博";
+        else if (platformChoice == 2) platformName = "WeChat";
+        else if (platformChoice == 3) platformName = "Weibo";
         else {
-            std::cout << "输入有误\n";
+            std::cout << "Invalid input\n";
             break;
         }
         bindingManager.bindPlatform(user, platformName, false);
-        std::cout << "继续开通平台（1.QQ 2.微信 3.微博，输入0结束）：";
+        std::cout << "Continue opening platform (1.QQ 2.WeChat 3.Weibo, 0 to finish): ";
         std::cin >> platformChoice;
     }
 
     if (accountManager.registerUser(users, user)) {
-        std::cout << "注册成功\n";
+        std::cout << "Registration successful\n";
     } else {
-        std::cout << "注册失败\n";
+        std::cout << "Registration failed\n";
     }
 }
 
 void SystemUIJZY::loginUser() {
     std::string id, password;
-    std::cout << "请输入ID：";
+    std::cout << "Enter ID: ";
     std::cin >> id;
-    std::cout << "请输入密码：";
+    std::cout << "Enter password: ";
     std::cin >> password;
 
     UserInfoJZY tempUser;
     if (accountManager.loginUser(users, id, password, tempUser)) {
         currentUser = tempUser;
         loggedIn = true;
-        std::cout << "登录成功，欢迎 " << currentUser.getNickName() << "\n";
-        std::cout << "若未绑定其他平台，可在绑定管理中选择绑定\n";
+        std::cout << "Login successful, welcome " << currentUser.getNickName() << "\n";
+        std::cout << "If other platforms are not bound, you can bind them in the bind menu.\n";
     } else {
-        std::cout << "登录失败，ID或密码错误\n";
+        std::cout << "Login failed, invalid ID or password\n";
     }
 }
 
 void SystemUIJZY::handlePlatformAction(const std::string& platformName) {
-    if (platformName == "退出登录") {
+    if (platformName == "Logout") {
         loggedIn = false;
         currentUser = UserInfoJZY();
         return;
     }
 
-    if (platformName == "绑定管理") {
+    if (platformName == "Bind") {
         showBindingMenu();
         return;
     }
 
     if (!userHasPlatform(platformName)) {
-        std::cout << "当前用户未开通该平台，是否开通？（1.是 2.否）";
+        std::cout << "The user has not enabled this platform. Enable it? (1.Yes 2.No)";
         int choose = 0;
         std::cin >> choose;
         if (choose == 1) {
@@ -196,8 +196,8 @@ void SystemUIJZY::handlePlatformAction(const std::string& platformName) {
                 if (user.getUserID() == currentUser.getUserID()) {
                     user.setCurrentPlatform(platformName);
                     if (platformName == "QQ") user.setQQOpened(true);
-                    if (platformName == "微信") user.setWeChatOpened(true);
-                    if (platformName == "微博") user.setWeiboOpened(true);
+                    if (platformName == "WeChat") user.setWeChatOpened(true);
+                    if (platformName == "Weibo") user.setWeiboOpened(true);
                     break;
                 }
             }
@@ -207,14 +207,14 @@ void SystemUIJZY::handlePlatformAction(const std::string& platformName) {
     }
 
     currentUser.setCurrentPlatform(platformName);
-    std::cout << "进入 " << platformName << " 平台\n";
+    std::cout << "Entering " << platformName << " platform\n";
     while (true) {
-        std::cout << "\n=== " << platformName << " 平台菜单 ===\n";
-        std::cout << "1. 个人信息\n";
-        std::cout << "2. 好友管理\n";
-        std::cout << "3. 群管理\n";
-        std::cout << "4. 返回上一级\n";
-        std::cout << "请选择：";
+        std::cout << "\n=== " << platformName << " Platform Menu ===\n";
+        std::cout << "1. Profile\n";
+        std::cout << "2. Friend Management\n";
+        std::cout << "3. Group Management\n";
+        std::cout << "4. Return\n";
+        std::cout << "Choose: ";
         int choice = 0;
         std::cin >> choice;
 
@@ -223,16 +223,16 @@ void SystemUIJZY::handlePlatformAction(const std::string& platformName) {
             case 2: showFriendMenu(); break;
             case 3: showGroupMenu(); break;
             case 4: return;
-            default: std::cout << "输入有误\n"; break;
+            default: std::cout << "Invalid input\n"; break;
         }
     }
 }
 
 void SystemUIJZY::showUserProfileMenu() {
-    std::cout << "\n=== 个人信息 ===\n";
+    std::cout << "\n=== Profile ===\n";
     showCurrentUserInfo();
-    std::cout << "1. 编辑个人信息\n";
-    std::cout << "2. 返回\n";
+    std::cout << "1. Edit profile\n";
+    std::cout << "2. Return\n";
     int choice = 0;
     std::cin >> choice;
     if (choice == 1) {
@@ -254,31 +254,31 @@ void SystemUIJZY::editCurrentUserInfo() {
     for (auto& user : users) {
         if (user.getUserID() == currentUser.getUserID()) {
             std::string newNick, newLocation, newBirthday;
-            std::cout << "请输入新昵称（回车保持不变）: ";
+            std::cout << "Enter new nickname (empty to keep): ";
             std::cin >> newNick;
             if (!newNick.empty()) user.setNickName(newNick);
 
-            std::cout << "请输入新所在地（回车保持不变）: ";
+            std::cout << "Enter new location (empty to keep): ";
             std::cin >> newLocation;
             if (!newLocation.empty()) user.setLocation(newLocation);
 
-            std::cout << "请输入新生日（回车保持不变）: ";
+            std::cout << "Enter new birthday (empty to keep): ";
             std::cin >> newBirthday;
             if (!newBirthday.empty()) user.setBirthday(newBirthday);
 
             currentUser = user;
-            std::cout << "个人信息已更新\n";
+            std::cout << "Profile updated\n";
             return;
         }
     }
 }
 
 void SystemUIJZY::showFriendMenu() {
-    std::cout << "\n=== 好友管理 ===\n";
-    std::cout << "1. 好友列表\n";
-    std::cout << "2. 添加好友\n";
-    std::cout << "3. 查询好友\n";
-    std::cout << "4. 返回\n";
+    std::cout << "\n=== Friend Management ===\n";
+    std::cout << "1. Friend list\n";
+    std::cout << "2. Add friend\n";
+    std::cout << "3. Query friend\n";
+    std::cout << "4. Return\n";
     int choice = 0;
     std::cin >> choice;
     switch (choice) {
@@ -286,7 +286,7 @@ void SystemUIJZY::showFriendMenu() {
         case 2: addFriendByID(); break;
         case 3: queryFriend(); break;
         case 4: break;
-        default: std::cout << "输入有误\n"; break;
+        default: std::cout << "Invalid input\n"; break;
     }
 }
 
@@ -299,13 +299,13 @@ void SystemUIJZY::showFriendList() {
     }
 
     if (platformFriends.empty()) {
-        std::cout << "当前平台暂无好友\n";
+        std::cout << "No friends in the current platform\n";
         return;
     }
 
-    std::cout << "\n=== 好友列表（" << currentUser.getCurrentPlatform() << "）===\n";
+    std::cout << "\n=== Friend List (" << currentUser.getCurrentPlatform() << ") ===\n";
     friendManager.printFriends(platformFriends);
-    std::cout << "输入好友列表前的序号可编辑：";
+    std::cout << "Enter the number to edit a friend: ";
     int index = 0;
     std::cin >> index;
     if (index > 0 && index <= static_cast<int>(platformFriends.size())) {
@@ -313,12 +313,12 @@ void SystemUIJZY::showFriendList() {
         for (auto& friendInfo : friends) {
             if (friendInfo.getFriendID() == selectedID) {
                 friendInfo.showInfo();
-                std::cout << "是否删除好友？1是 0否：";
+                std::cout << "Delete this friend? 1.Yes 0.No: ";
                 int del = 0;
                 std::cin >> del;
                 if (del == 1) {
                     friendManager.deleteFriend(friends, selectedID);
-                    std::cout << "删除成功\n";
+                    std::cout << "Deleted successfully\n";
                 }
                 break;
             }
@@ -328,11 +328,11 @@ void SystemUIJZY::showFriendList() {
 
 void SystemUIJZY::addFriendByID() {
     std::string friendID, remark, groupName;
-    std::cout << "请输入要添加好友的ID：";
+    std::cout << "Enter friend's ID: ";
     std::cin >> friendID;
-    std::cout << "请输入备注：";
+    std::cout << "Enter remark: ";
     std::cin >> remark;
-    std::cout << "请输入分组：";
+    std::cout << "Enter group: ";
     std::cin >> groupName;
 
     bool exists = false;
@@ -344,7 +344,7 @@ void SystemUIJZY::addFriendByID() {
     }
 
     if (!exists) {
-        std::cout << "该用户不存在\n";
+        std::cout << "This user does not exist\n";
         return;
     }
 
@@ -356,30 +356,30 @@ void SystemUIJZY::addFriendByID() {
     friendInfo.setPlatform(currentUser.getCurrentPlatform());
 
     if (friendManager.addFriend(friends, friendInfo)) {
-        std::cout << "添加好友成功\n";
+        std::cout << "Friend added successfully\n";
     } else {
-        std::cout << "好友已存在\n";
+        std::cout << "Friend already exists\n";
     }
 }
 
 void SystemUIJZY::addFriendByRecommend() {
-    std::cout << "推荐好友功能\n";
+    std::cout << "Recommended friends\n";
     showRecommendedFriends(currentUser.getCurrentPlatform());
 }
 
 void SystemUIJZY::queryFriend() {
-    std::cout << "1. 按ID查询\n2. 按昵称查询\n请选择：";
+    std::cout << "1. Query by ID\n2. Query by nickname\nChoose: ";
     int choice = 0;
     std::cin >> choice;
     std::string key;
     if (choice == 1) {
-        std::cout << "请输入好友ID：";
+        std::cout << "Enter friend ID: ";
         std::cin >> key;
     } else if (choice == 2) {
-        std::cout << "请输入好友昵称：";
+        std::cout << "Enter friend nickname: ";
         std::cin >> key;
     } else {
-        std::cout << "输入有误\n";
+        std::cout << "Invalid input\n";
         return;
     }
 
@@ -392,28 +392,28 @@ void SystemUIJZY::queryFriend() {
     }
 
     if (result.empty()) {
-        std::cout << "未找到相关好友\n";
+        std::cout << "No matching friend found\n";
         return;
     }
 
-    std::cout << "查询结果：\n";
+    std::cout << "Query results:\n";
     for (size_t i = 0; i < result.size(); ++i) {
         std::cout << i + 1 << ". " << result[i].getFriendID() << " " << result[i].getNickName() << "\n";
     }
 }
 
 void SystemUIJZY::editFriend() {
-    std::cout << "编辑好友功能占位\n";
+    std::cout << "Edit friend function placeholder\n";
 }
 
 void SystemUIJZY::showGroupMenu() {
-    std::cout << "\n=== 群管理 ===\n";
-    std::cout << "1. 群列表\n";
-    std::cout << "2. 加入群\n";
-    std::cout << "3. 退出群\n";
-    std::cout << "4. 查询群成员\n";
-    std::cout << "5. 动态切换群管理模式\n";
-    std::cout << "6. 返回\n";
+    std::cout << "\n=== Group Management ===\n";
+    std::cout << "1. Group list\n";
+    std::cout << "2. Join group\n";
+    std::cout << "3. Quit group\n";
+    std::cout << "4. Query group members\n";
+    std::cout << "5. Dynamic mode switch\n";
+    std::cout << "6. Return\n";
     int choice = 0;
     std::cin >> choice;
     switch (choice) {
@@ -423,7 +423,7 @@ void SystemUIJZY::showGroupMenu() {
         case 4: showGroupMembers(); break;
         case 5: showGroupDynamicMode(); break;
         case 6: break;
-        default: std::cout << "输入有误\n"; break;
+        default: std::cout << "Invalid input\n"; break;
     }
 }
 
@@ -435,7 +435,7 @@ void SystemUIJZY::showGroupList() {
         }
     }
     if (platformGroups.empty()) {
-        std::cout << "当前平台暂无群\n";
+        std::cout << "No groups in the current platform\n";
         return;
     }
     groupManager.printGroups(platformGroups);
@@ -443,7 +443,7 @@ void SystemUIJZY::showGroupList() {
 
 void SystemUIJZY::joinGroupByID() {
     std::string groupID;
-    std::cout << "请输入要加入的群号：";
+    std::cout << "Enter group ID to join: ";
     std::cin >> groupID;
     GroupInfoJZY target;
     for (const auto& group : groups) {
@@ -454,104 +454,103 @@ void SystemUIJZY::joinGroupByID() {
     }
 
     if (target.getGroupID().empty()) {
-        std::cout << "群号不存在\n";
+        std::cout << "Group does not exist\n";
         return;
     }
 
     if (target.getPlatform() != currentUser.getCurrentPlatform()) {
-        std::cout << "当前平台与该群不匹配\n";
+        std::cout << "Current platform does not match the group platform\n";
         return;
     }
 
     if (groupManager.joinGroup(groups, groupID, currentUser.getUserID())) {
-        std::cout << "加入群成功\n";
+        std::cout << "Joined group successfully\n";
     } else {
-        std::cout << "加入失败\n";
+        std::cout << "Join failed\n";
     }
 }
 
 void SystemUIJZY::quitGroup() {
     std::string groupID;
-    std::cout << "请输入要退出的群号：";
+    std::cout << "Enter group ID to quit: ";
     std::cin >> groupID;
     if (groupManager.exitGroup(groups, groupID, currentUser.getUserID())) {
-        std::cout << "退出群成功\n";
+        std::cout << "Quit group successfully\n";
     } else {
-        std::cout << "未找到该群或未加入\n";
+        std::cout << "Group not found or not joined\n";
     }
 }
 
 void SystemUIJZY::showGroupMembers() {
     std::string groupID;
-    std::cout << "请输入群号：";
+    std::cout << "Enter group ID: ";
     std::cin >> groupID;
     GroupInfoJZY group = groupManager.findGroupByID(groups, groupID);
     if (group.getGroupID().empty()) {
-        std::cout << "群不存在\n";
+        std::cout << "Group does not exist\n";
         return;
     }
-    std::cout << "群成员：\n";
+    std::cout << "Group members:\n";
     groupManager.printMembers(group);
 }
 
 void SystemUIJZY::showGroupDynamicMode() {
-    std::cout << "\n=== 群管理模式动态切换 ===\n";
-    std::cout << "1. QQ群模式\n";
-    std::cout << "2. 微信群模式\n";
-    std::cout << "3. 微博群模式\n";
-    std::cout << "请选择：";
+    std::cout << "\n=== Dynamic Group Management Mode ===\n";
+    std::cout << "1. QQ group mode\n";
+    std::cout << "2. WeChat group mode\n";
+    std::cout << "3. Weibo group mode\n";
+    std::cout << "Choose: ";
     int choice = 0;
     std::cin >> choice;
-    if (choice == 1) std::cout << "QQ群可申请加入、允许临时讨论组、管理员制度\n";
-    else if (choice == 2) std::cout << "微信群只能推荐加入、不允许临时讨论组、仅群主特权\n";
-    else if (choice == 3) std::cout << "微博群以社交平台为主，采用简化管理模式\n";
-    else std::cout << "输入有误\n";
+    if (choice == 1) std::cout << "QQ group mode supports applications, temporary groups, and admin system.\n";
+    else if (choice == 2) std::cout << "WeChat group mode only supports invitation and group owner privileges.\n";
+    else if (choice == 3) std::cout << "Weibo group uses a simplified social management mode.\n";
+    else std::cout << "Invalid input\n";
 }
 
 void SystemUIJZY::showRecommendedFriends(const std::string& platformName) {
     std::vector<FriendInfoJZY> recs = friendManager.findRecommendedFriends(friends, currentUser.getUserID(), platformName);
     if (recs.empty()) {
-        std::cout << "暂无推荐好友\n";
+        std::cout << "No recommended friends\n";
         return;
     }
     for (size_t i = 0; i < recs.size(); ++i) {
-        std::cout << i + 1 << ". " << recs[i].getNickName() << "（" << recs[i].getFriendID() << "）\n";
+        std::cout << i + 1 << ". " << recs[i].getNickName() << " (" << recs[i].getFriendID() << ")\n";
     }
 }
 
 void SystemUIJZY::showBindingMenu() {
-    std::cout << "\n=== 绑定管理 ===\n";
-    std::cout << "1. QQ绑定\n";
-    std::cout << "2. 微信绑定\n";
-    std::cout << "3. 微博绑定\n";
-    std::cout << "4. 返回\n";
-    std::cout << "请选择：";
+    std::cout << "\n=== Bind Management ===\n";
+    std::cout << "1. QQ bind\n";
+    std::cout << "2. WeChat bind\n";
+    std::cout << "3. Weibo bind\n";
+    std::cout << "4. Return\n";
+    std::cout << "Choose: ";
     int choice = 0;
     std::cin >> choice;
     std::string platform = "";
     switch (choice) {
         case 1: platform = "QQ"; break;
-        case 2: platform = "微信"; break;
-        case 3: platform = "微博"; break;
+        case 2: platform = "WeChat"; break;
+        case 3: platform = "Weibo"; break;
         case 4: return;
-        default: std::cout << "输入有误\n"; return;
+        default: std::cout << "Invalid input\n"; return;
     }
 
     if (bindingManager.isPlatformOpened(currentUser, platform)) {
-        std::cout << platform << " 已开通\n";
+        std::cout << platform << " is already enabled\n";
         return;
     }
 
     if (bindingManager.bindPlatform(currentUser, platform, false)) {
-        std::cout << platform << "绑定成功\n";
+        std::cout << platform << " bind success\n";
         for (auto& user : users) {
             if (user.getUserID() == currentUser.getUserID()) {
                 if (platform == "QQ") user.setQQOpened(true);
-                if (platform == "微信") user.setWeChatOpened(true);
-                if (platform == "微博") user.setWeiboOpened(true);
+                if (platform == "WeChat") user.setWeChatOpened(true);
+                if (platform == "Weibo") user.setWeiboOpened(true);
                 break;
             }
         }
     }
 }
-
