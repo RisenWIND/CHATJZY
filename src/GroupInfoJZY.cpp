@@ -1,45 +1,82 @@
-#include "GroupInfoJZY.h"
+#include "GroupManagerJZY.h"
 #include <algorithm>
 #include <iostream>
 
-GroupInfoJZY::GroupInfoJZY() {}
-GroupInfoJZY::~GroupInfoJZY() {}
+GroupManagerJZY::GroupManagerJZY() {}
+GroupManagerJZY::~GroupManagerJZY() {}
 
-void GroupInfoJZY::setGroupID(const std::string& id) { groupID = id; }
-std::string GroupInfoJZY::getGroupID() const { return groupID; }
+bool GroupManagerJZY::addGroup(std::vector<GroupInfoJZY>& groups, const GroupInfoJZY& group) {
+    for (const auto& item : groups) {
+        if (item.getGroupID() == group.getGroupID()) {
+            return false;
+        }
+    }
+    groups.push_back(group);
+    return true;
+}
 
-void GroupInfoJZY::setGroupName(const std::string& name) { groupName = name; }
-std::string GroupInfoJZY::getGroupName() const { return groupName; }
+bool GroupManagerJZY::joinGroup(std::vector<GroupInfoJZY>& groups, const std::string& groupID, const std::string& userID) {
+    auto it = std::find_if(groups.begin(), groups.end(), [&](const GroupInfoJZY& group) {
+        return group.getGroupID() == groupID;
+    });
+    if (it == groups.end()) {
+        return false;
+    }
+    it->addMember(userID);
+    return true;
+}
 
-void GroupInfoJZY::setPlatform(const std::string& platformName) { platform = platformName; }
-std::string GroupInfoJZY::getPlatform() const { return platform; }
+bool GroupManagerJZY::exitGroup(std::vector<GroupInfoJZY>& groups, const std::string& groupID, const std::string& userID) {
+    auto it = std::find_if(groups.begin(), groups.end(), [&](const GroupInfoJZY& group) {
+        return group.getGroupID() == groupID;
+    });
+    if (it == groups.end()) {
+        return false;
+    }
+    it->removeMember(userID);
+    return true;
+}
 
-void GroupInfoJZY::setOwnerID(const std::string& id) { ownerID = id; }
-std::string GroupInfoJZY::getOwnerID() const { return ownerID; }
+GroupInfoJZY GroupManagerJZY::findGroupByID(const std::vector<GroupInfoJZY>& groups, const std::string& groupID) const {
+    for (const auto& group : groups) {
+        if (group.getGroupID() == groupID) {
+            return group;
+        }
+    }
+    return GroupInfoJZY();
+}
 
-void GroupInfoJZY::addMember(const std::string& memberID) {
-    if (!hasMember(memberID)) {
-        members.push_back(memberID);
+std::vector<GroupInfoJZY> GroupManagerJZY::findGroupsByPlatform(const std::vector<GroupInfoJZY>& groups, const std::string& platform) const {
+    std::vector<GroupInfoJZY> result;
+    for (const auto& group : groups) {
+        if (group.getPlatform() == platform) {
+            result.push_back(group);
+        }
+    }
+    return result;
+}
+
+void GroupManagerJZY::printGroups(const std::vector<GroupInfoJZY>& groups) const {
+    if (groups.empty()) {
+        std::cout << "No groups currently\n";
+        return;
+    }
+    int index = 1;
+    for (const auto& group : groups) {
+        std::cout << index++ << ". " << group.getGroupName() << " (" << group.getGroupID() << ")" << " Platform:" << group.getPlatform() << "\n";
     }
 }
 
-void GroupInfoJZY::removeMember(const std::string& memberID) {
-    auto it = std::find(members.begin(), members.end(), memberID);
-    if (it != members.end()) {
-        members.erase(it);
+void GroupManagerJZY::printMembers(const GroupInfoJZY& group) const {
+    const auto members = group.getMembers();
+    if (members.empty()) {
+        std::cout << "No members in the group\n";
+        return;
+    }
+    int index = 1;
+    for (const auto& member : members) {
+        std::cout << index++ << ". " << member << "\n";
     }
 }
 
-bool GroupInfoJZY::hasMember(const std::string& memberID) const {
-    return std::find(members.begin(), members.end(), memberID) != members.end();
-}
 
-std::vector<std::string> GroupInfoJZY::getMembers() const { return members; }
-
-void GroupInfoJZY::showInfo() const {
-    std::cout << "群ID: " << groupID << "\n";
-    std::cout << "群名: " << groupName << "\n";
-    std::cout << "平台: " << platform << "\n";
-    std::cout << "群主: " << ownerID << "\n";
-    std::cout << "成员数: " << members.size() << "\n";
-}

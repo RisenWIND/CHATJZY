@@ -1,80 +1,89 @@
-#include "GroupManagerJZY.h"
+#include "FriendManagerJZY.h"
 #include <algorithm>
 #include <iostream>
 
-GroupManagerJZY::GroupManagerJZY() {}
-GroupManagerJZY::~GroupManagerJZY() {}
+FriendManagerJZY::FriendManagerJZY() {}
+FriendManagerJZY::~FriendManagerJZY() {}
 
-bool GroupManagerJZY::addGroup(std::vector<GroupInfoJZY>& groups, const GroupInfoJZY& group) {
-    for (const auto& item : groups) {
-        if (item.getGroupID() == group.getGroupID()) {
+bool FriendManagerJZY::addFriend(std::vector<FriendInfoJZY>& friends, const FriendInfoJZY& friendInfo) {
+    for (const auto& item : friends) {
+        if (item.getFriendID() == friendInfo.getFriendID()) {
             return false;
         }
     }
-    groups.push_back(group);
+    friends.push_back(friendInfo);
     return true;
 }
 
-bool GroupManagerJZY::joinGroup(std::vector<GroupInfoJZY>& groups, const std::string& groupID, const std::string& userID) {
-    auto it = std::find_if(groups.begin(), groups.end(), [&](const GroupInfoJZY& group) {
-        return group.getGroupID() == groupID;
+bool FriendManagerJZY::deleteFriend(std::vector<FriendInfoJZY>& friends, const std::string& friendID) {
+    auto it = std::find_if(friends.begin(), friends.end(), [&](const FriendInfoJZY& item) {
+        return item.getFriendID() == friendID;
     });
-    if (it == groups.end()) {
+    if (it == friends.end()) {
         return false;
     }
-    it->addMember(userID);
+    friends.erase(it);
     return true;
 }
 
-bool GroupManagerJZY::exitGroup(std::vector<GroupInfoJZY>& groups, const std::string& groupID, const std::string& userID) {
-    auto it = std::find_if(groups.begin(), groups.end(), [&](const GroupInfoJZY& group) {
-        return group.getGroupID() == groupID;
+bool FriendManagerJZY::updateFriend(std::vector<FriendInfoJZY>& friends, const std::string& friendID, const std::string& remark, const std::string& groupName) {
+    auto it = std::find_if(friends.begin(), friends.end(), [&](const FriendInfoJZY& item) {
+        return item.getFriendID() == friendID;
     });
-    if (it == groups.end()) {
+    if (it == friends.end()) {
         return false;
     }
-    it->removeMember(userID);
+    it->setRemark(remark);
+    it->setGroup(groupName);
     return true;
 }
 
-GroupInfoJZY GroupManagerJZY::findGroupByID(const std::vector<GroupInfoJZY>& groups, const std::string& groupID) const {
-    for (const auto& group : groups) {
-        if (group.getGroupID() == groupID) {
-            return group;
+FriendInfoJZY FriendManagerJZY::findFriendByID(const std::vector<FriendInfoJZY>& friends, const std::string& friendID) const {
+    for (const auto& item : friends) {
+        if (item.getFriendID() == friendID) {
+            return item;
         }
     }
-    return GroupInfoJZY();
+    return FriendInfoJZY();
 }
 
-std::vector<GroupInfoJZY> GroupManagerJZY::findGroupsByPlatform(const std::vector<GroupInfoJZY>& groups, const std::string& platform) const {
-    std::vector<GroupInfoJZY> result;
-    for (const auto& group : groups) {
-        if (group.getPlatform() == platform) {
-            result.push_back(group);
+std::vector<FriendInfoJZY> FriendManagerJZY::findFriendsByNickname(const std::vector<FriendInfoJZY>& friends, const std::string& nickName) const {
+    std::vector<FriendInfoJZY> result;
+    for (const auto& item : friends) {
+        if (item.getNickName() == nickName) {
+            result.push_back(item);
         }
     }
     return result;
 }
 
-void GroupManagerJZY::printGroups(const std::vector<GroupInfoJZY>& groups) const {
-    if (groups.empty()) {
-        std::cout << "当前没有群\n";
-        return;
+std::vector<FriendInfoJZY> FriendManagerJZY::getFriendsByPlatform(const std::vector<FriendInfoJZY>& friends, const std::string& platform) const {
+    std::vector<FriendInfoJZY> result;
+    for (const auto& item : friends) {
+        if (item.getPlatform() == platform) {
+            result.push_back(item);
+        }
     }
-    int index = 1;
-    for (const auto& group : groups) {
-        std::cout << index++ << ". " << group.getGroupName() << "（" << group.getGroupID() << "）" << " 平台:" << group.getPlatform() << "\n";
-    }
+    return result;
 }
 
-void GroupManagerJZY::printMembers(const GroupInfoJZY& group) const {
-    const auto members = group.getMembers();
-    if (members.empty()) {
-        std::cout << "群里还没有成员\n";
+std::vector<FriendInfoJZY> FriendManagerJZY::findRecommendedFriends(const std::vector<FriendInfoJZY>& friends, const std::string& currentUserID, const std::string& platform) const {
+    std::vector<FriendInfoJZY> result;
+    for (const auto& item : friends) {
+        if (item.getPlatform() == platform && item.getFriendID() != currentUserID) {
+            result.push_back(item);
+        }
+    }
+    return result;
+}
+
+void FriendManagerJZY::printFriends(const std::vector<FriendInfoJZY>& friends) const {
+    if (friends.empty()) {
+        std::cout << "No friends currently\n";
         return;
     }
     int index = 1;
-    for (const auto& member : members) {
-        std::cout << index++ << ". " << member << "\n";
+    for (const auto& friendInfo : friends) {
+        std::cout << index++ << ". " << friendInfo.getNickName() << " (" << friendInfo.getFriendID() << ")" << " Group:" << friendInfo.getGroup() << "\n";
     }
 }
